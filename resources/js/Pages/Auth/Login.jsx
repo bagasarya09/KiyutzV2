@@ -1,10 +1,7 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { useForm, Link } from '@inertiajs/react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
+import AuthLayout from '@/Layouts/AuthLayout';
+import AuthInput from '@/Components/UI/AuthInput';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -15,86 +12,67 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
-
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
+        post('/login', { onFinish: () => reset('password') });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
-
+        <AuthLayout
+            title="Log in"
+            badge="Welcome to Kiyutz"
+            heading="Welcome Back"
+            subtitle="Masukkan email dan password untuk mengakses dashboard admin."
+        >
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mt-6 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-600">
                     {status}
                 </div>
             )}
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+            <form className="mt-8 space-y-5" onSubmit={submit}>
+                <AuthInput
+                    icon={Mail} type="email" name="email" label="Email"
+                    placeholder="admin@kiyutz.com" autoComplete="username" autoFocus
+                    value={data.email} onChange={(e) => setData('email', e.target.value)} error={errors.email}
+                />
+                <AuthInput
+                    icon={Lock} isPassword name="password" label="Password"
+                    placeholder="Masukkan password" autoComplete="current-password"
+                    value={data.password} onChange={(e) => setData('password', e.target.value)} error={errors.password}
+                />
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
+                {/* Remember + Forgot */}
+                <div className="flex items-center justify-between">
+                    <label className="flex items-center gap-2 text-sm text-[#6C7095]">
+                        <input
+                            type="checkbox" name="remember" checked={data.remember}
+                            onChange={(e) => setData('remember', e.target.checked)}
+                            className="h-4 w-4 rounded border-[#F2F2F2] text-[#0B1F33] focus:ring-[#0B1F33]"
                         />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
+                        Remember me
                     </label>
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
                     {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
+                        <Link href="/forgot-password" className="text-sm font-medium text-[#B268A7] transition hover:opacity-80">
+                            Forgot password?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
                 </div>
+
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#0B1F33] px-5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(11,31,51,0.18)] transition hover:-translate-y-0.5 hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    {processing ? 'Memproses...' : 'Log In'}
+                    <ArrowRight size={18} className="transition group-hover:translate-x-0.5" />
+                </button>
+
+                <p className="text-center text-sm text-[#6C7095]">
+                    Belum punya akun?{' '}
+                    <Link href="/register" className="font-semibold text-[#B268A7] transition hover:opacity-80">
+                        Register
+                    </Link>
+                </p>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }
