@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
     ChevronRight, LayoutDashboard, Package, Tags, LogOut, UserCircle, Menu, X,
@@ -7,9 +7,9 @@ import {
 import LogoKiyutz from '../../assets/LogoKiyutz.png';
 
 const menuItems = [
-    { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Products', path: '/admin/products', icon: Package },
-    { label: 'Categories', path: '/admin/categories', icon: Tags },
+  { label: 'Dashboard',  path: '/admin/dashboard',  icon: LayoutDashboard },
+  { label: 'Products',   path: '/admin/products',   icon: Package },
+  { label: 'Categories', path: '/admin/categories', icon: Tags },
 ];
 
 const sidebarVariants = {
@@ -82,7 +82,8 @@ export default function Sidebar() {
 }
 
 function SidebarContent({ isCollapsed, onClose }) {
-    const { url } = usePage();
+    const { url, props } = usePage();
+    const user = props.auth?.user;
 
     return (
         <div className="flex h-full flex-col bg-white">
@@ -171,15 +172,19 @@ function SidebarContent({ isCollapsed, onClose }) {
                     {!isCollapsed && <span className="truncate">Logout</span>}
                 </Link>
                 {!isCollapsed && (
-                    <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#F8F9FE] p-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#0B1F33]">
-                            <UserCircle size={23} />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-[#0B1F33]">Admin Kiyutz</p>
-                            <p className="truncate text-xs text-[#6C7095]">admin@kiyutz.com</p>
-                        </div>
+                <div className="mt-4 flex items-center gap-3 rounded-2xl bg-[#F8F9FE] p-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#0B1F33]">
+                    <UserCircle size={23} />
                     </div>
+                    <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-[#0B1F33]">
+                        {user?.name}
+                    </p>
+                    <p className="truncate text-xs text-[#6C7095]">
+                        {user?.email}
+                    </p>
+                    </div>
+                </div>
                 )}
             </div>
         </div>

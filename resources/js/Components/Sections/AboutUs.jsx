@@ -40,6 +40,8 @@ export default function AboutUs() {
                 <div className="flex h-[438px] w-[326px] max-w-full items-center justify-center overflow-hidden rounded-lg bg-accent/10 p-5">
                     <img
                         src="https://placehold.co/286x398"
+                        loading='lazy'
+                        decoding='async'
                         alt="Tentang Kiyutz"
                         className="h-full w-full rounded object-cover"
                     />
@@ -55,6 +57,8 @@ export default function AboutUs() {
                 >
                     <img
                         src="https://placehold.co/169x228"
+                        loading='lazy'
+                        decoding='async'
                         alt="Tentang Kiyutz"
                         className="h-[228px] w-[169px] rounded object-cover"
                     />

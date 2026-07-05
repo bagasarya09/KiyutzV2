@@ -1,18 +1,51 @@
+import { lazy, Suspense } from 'react';
 import Navbar from '@/Layouts/Navbar';
-import BlurCircle from '@/Components/Sections/BlurCircle';
 import Hero from '@/Components/Sections/Hero';
-import Gallery from '@/Components/Sections/Gallery';
+import BlurCircle from '@/Components/Sections/BlurCircle';
 import WhyKiyutz from '@/Components/Sections/WhyKiyutz';
 import AboutUs from '@/Components/Sections/AboutUs';
 import Products from '@/Components/Sections/Products';
-import Contact from '@/Components/Sections/Contact';
 import Footer from '@/Components/Sections/Footer';
-import Reveal from '@/Components/UI/Reveal';
-import Certifications from '@/Components/Sections/Certifications';
+import { Head } from '@inertiajs/react';
 
+const Certifications = lazy(() => import('@/Components/Sections/Certifications'));
+const Contact = lazy(() => import('@/Components/Sections/Contact'));
 
-export default function Landing() {
+export default function Landing({ products, categories }) {
     return (
+        <>
+        <Head>
+        <title>Kiyutz — Camilan & Makanan Enak</title>
+        <meta name="description" content="Temukan camilan gurih & manis favorit di Kiyutz. Pesan mudah, rasa istimewa." />
+        <link rel="canonical" href="https://domainmu.com/" />
+        {/* Open Graph (buat preview saat di-share ke WA/FB) */}
+        <meta property="og:title" content="Kiyutz" />
+        <meta property="og:description" content="Camilan enak untuk setiap suasana." />
+        <meta property="og:image" content="https://domainmu.com/og-image.jpg" />
+        <meta property="og:type" content="website" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": products.map((p, i) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "item": {
+                "@type": "Product",
+                "name": p.name,
+                "description": p.description,
+                "image": p.image ? `/storage/${p.image}` : undefined,
+                "offers": {
+                  "@type": "Offer",
+                  "priceCurrency": "IDR",
+                  "price": p.price,
+                },
+              },
+            })),
+          })}
+        </script>
+      </Head>
+
         <div className="relative min-h-screen w-full overflow-x-clip bg-base font-sans text-primary">
 
             {/* ===== LAYER BACKGROUND (di belakang semua konten) ===== */}
@@ -28,19 +61,17 @@ export default function Landing() {
                 <Navbar />
                 <Hero />
 
-                {/* Gallery full-bleed */}
-                {/* <div className="relative left-1/2 w-screen -translate-x-1/2">
-                    <Gallery />
-                </div> */}
-
                 <WhyKiyutz />
                 <AboutUs/>
-                <Products/>
-                <Certifications />
-                <Contact/>
+                <Products products={products} categories={categories} /> 
+                <Suspense fallback={<div className="h-40" />}>
+                    <Certifications />
+                    <Contact />
+                </Suspense>
             </div>
 
             <Footer/>
         </div>
+        </>
     );
 }

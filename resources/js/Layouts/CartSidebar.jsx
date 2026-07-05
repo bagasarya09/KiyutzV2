@@ -1,12 +1,16 @@
+import { useEffect } from 'react';
 import { X, ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/Context/CartContext';
 
+// Nomor WA toko: format '62...' (tanpa + dan tanpa 0 di depan)
+const WA_NUMBER = '62895327977461';   // 👈 GANTI dengan nomor WA tokomu
+
 // helper harga
-function parsePrice(str) {
-    if (typeof str === 'number') return str;
-    const [intPart] = String(str).split(',');
-    return Number(intPart.replace(/[^\d]/g, '')) || 0;
+function parsePrice(val) {
+    if (typeof val === 'number') return val;
+    return parseFloat(String(val).replace(/[^\d.]/g, '')) || 0;
 }
+
 function formatRupiah(n) {
     return 'Rp ' + n.toLocaleString('id-ID') + ',00';
 }
@@ -15,7 +19,42 @@ export default function CartSidebar({ open, onClose }) {
     const { items, updateQty, removeItem, clearCart } = useCart();
     const subtotal = items.reduce((sum, i) => sum + parsePrice(i.price) * i.qty, 0);
 
-    const qtyBtn = 'flex h-6 w-6 items-center justify-center rounded border border-base text-primary transition hover:bg-accent hover:text-white';
+    const qtyBtn =
+        'flex h-6 w-6 items-center justify-center rounded border border-base text-primary transition hover:bg-accent hover:text-white';
+
+    // 🔒 Kunci scroll body + tutup dengan Esc saat drawer terbuka
+    useEffect(() => {
+        if (!open) return;
+        document.body.style.overflow = 'hidden';
+        const onKey = (e) => e.key === 'Escape' && onClose();
+        window.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('keydown', onKey);
+        };
+    }, [open, onClose]);
+
+    // 💬 Checkout ke WhatsApp
+    const handleCheckout = () => {
+        if (items.length === 0) return;
+
+        let msg = `Halo *Kiyutz* 👋\n`;
+        msg += `Saya mau memesan produk berikut:\n\n`;
+
+        items.forEach((i, index) => {
+            const harga = parsePrice(i.price);
+            const lineTotal = harga * i.qty;
+            msg += `${index + 1}. *${i.name}*\n`;
+            msg += `   ${i.qty} x ${formatRupiah(harga)} = ${formatRupiah(lineTotal)}\n`;
+        });
+
+        msg += `\n*Subtotal: ${formatRupiah(subtotal)}*\n\n`;
+        msg += `Mohon info ketersediaan & cara pembayarannya ya. Terima kasih! 🙏`;
+
+        const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+        // clearCart(); // opsional: kosongkan keranjang setelah checkout
+    };
 
     return (
         <>
@@ -61,11 +100,19 @@ export default function CartSidebar({ open, onClose }) {
                                                 <Trash2 size={16} />
                                             </button>
                                         </div>
-                                        <p className="font-['Questrial'] text-xs text-accent">{item.price}</p>
-                                        <div className="mt-1 flex items-center gap-2">
-                                            <button onClick={() => updateQty(item.name, item.qty - 1)} className={qtyBtn}><Minus size={14} /></button>
-                                            <span className="w-6 text-center font-sans text-sm">{item.qty}</span>
-                                            <button onClick={() => updateQty(item.name, item.qty + 1)} className={qtyBtn}><Plus size={14} /></button>
+                                        {/* harga diformat + total per item */}
+                                        <p className="font-['Questrial'] text-xs text-accent">
+                                            {formatRupiah(parsePrice(item.price))}
+                                        </p>
+                                        <div className="mt-1 flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <button onClick={() => updateQty(item.name, item.qty - 1)} className={qtyBtn}><Minus size={14} /></button>
+                                                <span className="w-6 text-center font-sans text-sm">{item.qty}</span>
+                                                <button onClick={() => updateQty(item.name, item.qty + 1)} className={qtyBtn}><Plus size={14} /></button>
+                                            </div>
+                                            <span className="font-sans text-sm font-semibold text-primary">
+                                                {formatRupiah(parsePrice(item.price) * item.qty)}
+                                            </span>
                                         </div>
                                     </div>
                                 </li>
@@ -81,8 +128,11 @@ export default function CartSidebar({ open, onClose }) {
                             <span className="font-['Questrial'] text-sm text-secondary">Subtotal</span>
                             <span className="font-sans text-lg font-semibold text-accent">{formatRupiah(subtotal)}</span>
                         </div>
-                        <button className="w-full rounded-full bg-accent px-4 py-2.5 font-['Questrial'] text-sm text-white transition hover:opacity-90">
-                            Checkout
+                        <button
+                            onClick={handleCheckout}
+                            className="w-full rounded-full bg-accent px-4 py-2.5 font-['Questrial'] text-sm text-white transition hover:opacity-90"
+                        >
+                            Checkout via WhatsApp
                         </button>
                         <button onClick={clearCart} className="mt-2 w-full rounded-full px-4 py-2 font-['Questrial'] text-xs text-secondary transition hover:text-red-500">
                             Kosongkan Keranjang
