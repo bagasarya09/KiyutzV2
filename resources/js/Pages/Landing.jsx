@@ -1,4 +1,4 @@
-import Navbar from '@/Components/Layout/Navbar';
+import Navbar from '@/Layouts/Navbar';
 import BlurCircle from '@/Components/Sections/BlurCircle';
 import Hero from '@/Components/Sections/Hero';
 import Gallery from '@/Components/Sections/Gallery';
@@ -7,6 +7,9 @@ import AboutUs from '@/Components/Sections/AboutUs';
 import Products from '@/Components/Sections/Products';
 import Contact from '@/Components/Sections/Contact';
 import Footer from '@/Components/Sections/Footer';
+import Reveal from '@/Components/UI/Reveal';
+import Certifications from '@/Components/Sections/Certifications';
+
 
 export default function Landing() {
     return (
@@ -14,7 +17,7 @@ export default function Landing() {
 
             {/* ===== LAYER BACKGROUND (di belakang semua konten) ===== */}
             <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-                <BlurCircle className="h-[673px] w-[673px] top-[200px] left-[-371px]" />
+                <BlurCircle className="h-[673px] w-[673px] top-[400px] left-[-371px]" />
                 <BlurCircle className="h-[673px] w-[673px] top-[1200px] right-[-300px]" />
                 <BlurCircle className="h-[673px] w-[673px] top-[2400px] left-[-250px]" />
                 {/* tambah lagi sesuai kebutuhan section berikutnya */}
@@ -26,13 +29,14 @@ export default function Landing() {
                 <Hero />
 
                 {/* Gallery full-bleed */}
-                <div className="relative left-1/2 w-screen -translate-x-1/2">
+                {/* <div className="relative left-1/2 w-screen -translate-x-1/2">
                     <Gallery />
-                </div>
+                </div> */}
 
                 <WhyKiyutz />
                 <AboutUs/>
                 <Products/>
+                <Certifications />
                 <Contact/>
             </div>
 
