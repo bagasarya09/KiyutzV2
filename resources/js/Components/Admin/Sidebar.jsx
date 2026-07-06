@@ -3,6 +3,7 @@ import { Link, usePage, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
     ChevronRight, LayoutDashboard, Package, Tags, LogOut, UserCircle, Menu, X,
+    Store,
 } from 'lucide-react';
 import LogoKiyutz from '../../assets/LogoKiyutz.png';
 
@@ -10,6 +11,7 @@ const menuItems = [
   { label: 'Dashboard',  path: '/admin/dashboard',  icon: LayoutDashboard },
   { label: 'Products',   path: '/admin/products',   icon: Package },
   { label: 'Categories', path: '/admin/categories', icon: Tags },
+  { label: 'About', path: '/admin/about', icon: Store },
 ];
 
 const sidebarVariants = {

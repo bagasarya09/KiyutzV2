@@ -11,7 +11,7 @@ import { Head } from '@inertiajs/react';
 const Certifications = lazy(() => import('@/Components/Sections/Certifications'));
 const Contact = lazy(() => import('@/Components/Sections/Contact'));
 
-export default function Landing({ products, categories }) {
+export default function Landing({ products, categories, about }) {
     return (
         <>
         <Head>
@@ -62,7 +62,7 @@ export default function Landing({ products, categories }) {
                 <Hero />
 
                 <WhyKiyutz />
-                <AboutUs/>
+                <AboutUs about={about}/>
                 <Products products={products} categories={categories} /> 
                 <Suspense fallback={<div className="h-40" />}>
                     <Certifications />

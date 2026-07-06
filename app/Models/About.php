@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class About extends Model
+{
+    protected $fillable = [
+        'title', 'subtitle', 'description', 'vision', 'mission', 'quote', 'founder', 'image','image2', 
+    ];
+}
