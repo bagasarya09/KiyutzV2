@@ -30,10 +30,20 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        
+        $user = Auth::user();
 
-        $request->session()->regenerate();
+        // Kalau 2FA aktif → jangan langsung masuk, minta kode dulu
+    if ($user->two_factor_secret && $user->two_factor_confirmed_at) {
+        Auth::logout(); // batalkan sesi sementara
+        $request->session()->put('login.2fa_user_id', $user->id);
+        $request->session()->put('login.remember', $request->boolean('remember'));
 
-        return redirect()->intended('/admin/dashboard');
+        return redirect()->route('two-factor.login');
+    }
+
+    $request->session()->regenerate();
+    return redirect()->intended('/admin/dashboard');
     }
 
     /**

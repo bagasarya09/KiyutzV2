@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Models\Setting;
+use App\Models\Social;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\About;
@@ -19,6 +20,8 @@ class LandingController extends Controller
                 ->orderBy('name')
                 ->get(['id', 'name']),
             'about' => About::first(),
+            'setting' => Setting::first(),
+            'socials' => Social::where('status', 'aktif')->orderBy('sort_order')->get(),
         ]);
     }
 }

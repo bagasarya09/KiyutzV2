@@ -66,12 +66,12 @@ export default function Login({ status, canResetPassword }) {
                     <ArrowRight size={18} className="transition group-hover:translate-x-0.5" />
                 </button>
 
-                <p className="text-center text-sm text-[#6C7095]">
+                {/* <p className="text-center text-sm text-[#6C7095]">
                     Belum punya akun?{' '}
                     <Link href="/register" className="font-semibold text-[#B268A7] transition hover:opacity-80">
                         Register
                     </Link>
-                </p>
+                </p> */}
             </form>
         </AuthLayout>
     );

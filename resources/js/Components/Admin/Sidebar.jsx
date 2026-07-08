@@ -3,7 +3,7 @@ import { Link, usePage, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
     ChevronRight, LayoutDashboard, Package, Tags, LogOut, UserCircle, Menu, X,
-    Store,
+    Store,ShieldCheck, Settings,
 } from 'lucide-react';
 import LogoKiyutz from '../../assets/LogoKiyutz.png';
 
@@ -12,7 +12,11 @@ const menuItems = [
   { label: 'Products',   path: '/admin/products',   icon: Package },
   { label: 'Categories', path: '/admin/categories', icon: Tags },
   { label: 'About', path: '/admin/about', icon: Store },
+  { label: 'Keamanan', path: '/admin/security/two-factor', icon: ShieldCheck },
+  { label: 'Pengaturan', path: '/admin/settings', icon: Settings },
+
 ];
+
 
 const sidebarVariants = {
     open: { width: '280px' },
@@ -86,6 +90,8 @@ export default function Sidebar() {
 function SidebarContent({ isCollapsed, onClose }) {
     const { url, props } = usePage();
     const user = props.auth?.user;
+
+    
 
     return (
         <div className="flex h-full flex-col bg-white">
